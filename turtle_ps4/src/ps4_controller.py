@@ -8,6 +8,7 @@ from Ps4Data.msg import Ps4Data
 # hint: some imports are missing
 
 old_data = Ps4Data()
+currentAggressiveness = 0
 
 def callback(data):
     global old_data
@@ -15,7 +16,6 @@ def callback(data):
     # you should publish the velocity here!
     velocity = Twist()
     aggressiveness = [1,1.2,1.4,1.6,1.8]
-    currentAggressiveness = 0
     
     velocity.angular.z = aggressiveness[currentAggressiveness] * data.hat_rx
     velocity.linear.x = aggressiveness[currentAggressiveness] * data.hat_lx
@@ -27,17 +27,18 @@ def callback(data):
     
     
     #change aggresiveness
-    if (data.dpad_y == -1 and data.dpad_y == 0):
+    if (data.dpad_y == -1 and old_data.dpad_y == 0):
         if currentAggressiveness == 0:
             currentAggresiveness = 0
         else:
             currentAggressiveness -= 1
     
-    if (data.dpad_y == 1 and data.dpad_y == 0):
+    if (data.dpad_y == 1 and old_data.dpad_y == 0):
         if currentAggressiveness == 4:
             currentAggresiveness = 4
         else:
             currentAggressiveness += 1
+            
     #clear if ps button pressed
     if (data.ps == true and old_data.ps == false):
     	srv_clear()
